@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html>
+   {%load static%}
+   {% load cart %}
+   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>MegaCart</title>
+      <link href="{% static 'css/style2.css' %}" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"> 
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css">
+      <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+      <link rel="stylesheet" href="{% static 'css/flickity.css' %}" media="screen">
+      <script src="{% static 'js/flickity.pkgd.min.js' %}"></script>
+   </head>
+   
+   <body>
+      
+      <div class="header">
+
+         <div class="container">
+
+            <div class="navbar">
+              
+             <div class="logo">
+               <a href="homepage"><img src="{% static 'image/logo3.png' %}"></a>
+             </div>
+             <nav>
+               <ul id="menuItems">
+                  <li><a href="homepage">Home</a></li>
+                  <li><a href="about_us">About</a></li>
+                  <li><a href="orders">Orders</a></li>
+                  <li><a href="account">Account</a></li>
+               </ul>
+            
+            </nav>
+            <a href="cart"><img src="{% static 'image/cartIcon.png' %}" width="30px"></a>
+            {% if request.session.cart.keys|length %}
+            <span class="badge">{{request.session.cart.keys|length}}</span>
+            {% endif %}
+             <img src="{% static 'image/menu.png' %}" class="menu-icon" width="26px" onclick="menuToggle()">
+ 
+           </div>
+          </div>
+      </div>
+
+      <!-----------------CART ITEM DETAILS------------->
+
+      {% if products %}
+      <div class="small-container cart-page">
+          <table>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+              </tr>
+              {%for product in products%}
+              <tr>
+                  <td>
+                      <div class="cart-info">
+                         <div class="cart-img">
+                          <img src="{{product.image1.url}}">
+                        </div>
+                          <div class="details">
+                              <p>{{product.name}}</p>
+                              <small>Rs {{product.price}}</small>
+                              <br>
+                              <a href="">Remove</a>
+                          </div>
+                      </div>
+                  </td>
+                  <td><p class="product-quantity">{{product | cart_quantity:request.session.cart}}</p></td>
+                  <td class="cart-product-price">Rs {{product | product_price_total:request.session.cart}}</td>
+              </tr>
+              {% endfor %}
+              
+          </table>
+
+          <div class="total-price">
+              <table>
+                  <tr>
+                      <td>Subtotal</td>
+                      <td>Rs {{products | total_price:request.session.cart}}</td>
+                  </tr>
+                  <tr>
+                      <td>Delivery Charges</td>
+                      <td>Rs 0.00</td>
+                  </tr>
+                  <tr>
+                      <td><h3>Total</h3></td>
+                      <td><h3>Rs {{products | total_price:request.session.cart}}</h3></td>
+                  </tr>
+              </table>
+          </div>
+          <div>
+            <hr>
+            <form action="/check_out" method="POST">
+                {% csrf_token %}
+                <div class="checkout-btn btn"> 
+                      <input type="submit" class="btn2" value="Check out">
+                </div>
+             </form>
+          </div>
+          
+      </div>
+      {% else %}
+      <div class="small-container cart-page">
+         <h1 class="empty-cart">Your Cart is Empty</h1>
+         <form action="/" method="POST" style="text-align: center; margin-top: 10%;">
+            {% csrf_token %}
+            <div class="btn"> 
+                  <input type="submit" class="btn2" value="Shop Now">
+            </div>
+         </form>
+      </div>
+      {% endif %}
+
+
+
+      <!---------------Footer----------------->
+      <div class="footer">
+         <div class="container">
+            <div class="row">
+               <div class="footer-col-1">
+                  <h3>Download Our App</h3>
+                  <p>Download App for Android and Ios</p>
+                  <div class="app-logo">
+                     <img src="{% static 'image/playstore.png' %}">
+                     <img src="{% static 'image/appstore.png' %}">
+                  </div>
+               </div>
+               <div class="footer-col-2">
+                  <img src="{% static 'image/logo3.png' %}">
+               </div>
+
+               <div class="footer-col-3">
+                  <h3>Policy</h3>
+                  <ul>
+                     <li>Return Policy</li>
+                     <li>Terms of Use</li>
+                     <li>Privacy</li>
+                     <li>Security</li>
+                  </ul>
+               </div>
+
+               <div class="footer-col-4">
+                  <h3>Social</h3>
+                  <ul>
+                     <li>Facebook</li>
+                     <li>Twitter</li>
+                     <li>Instagram</li>
+                     <li>Youtube</li>
+                  </ul>
+               </div>
+             
+            </div>
+            <hr>
+            <p class="copyright"><small>Copyright 2021 MegaCart - All rights reserverd</small> </p>
+         </div>
+      </div>
+
+      <script>
+
+         var menuItems=document.getElementById("menuItems");
+
+         menuItems.style.maxHeight = "0px";
+
+         function menuToggle(){
+
+            if (menuItems.style.maxHeight=="0px"){
+               menuItems.style.maxHeight="200px";
+            }else{
+               menuItems.style.maxHeight="0px";
+            }
+
+         }
+
+      </script>
+
+       
+   </body>
+
+</html>

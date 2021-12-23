@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html>
+   {%load static%}
+   {%load cart%}
+   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>MegaCart</title>
+      <link href="{% static 'css/style2.css' %}" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"> 
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css">
+      <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+      <link rel="stylesheet" href="{% static 'css/flickity.css' %}" media="screen">
+      <script src="{% static 'js/flickity.pkgd.min.js' %}"></script>
+   </head>
+   
+   <body>
+      
+      <div class="header">
+
+         <div class="container">
+
+            <div class="navbar">
+              
+             <div class="logo">
+               <a href="homepage"><img src="{% static 'image/logo3.png' %}"></a>
+             </div>
+             <nav>
+               <ul id="menuItems">
+                  <li><a href="homepage">Home</a></li>
+                  <li><a href="about_us">About</a></li>
+                  <li><a href="orders">Orders</a></li>
+                  <li><a href="account">Account</a></li>
+               </ul>
+            
+            </nav>
+            <a href="cart"><img src="{% static 'image/cartIcon.png' %}" width="30px"></a>
+            {% if request.session.cart.keys|length %}
+            <span class="badge">{{request.session.cart.keys|length}}</span>
+            {% endif %}
+             <img src="{% static 'image/menu.png' %}" class="menu-icon" width="26px" onclick="menuToggle()">
+ 
+           </div>
+          </div>
+      </div>
+
+<!--------------------------SINGLE PRODUCT DETAILS---------------------------->
+
+      <div class="small-container single-mobile">
+          <div class="row">
+            {% for product in product %}
+              <div class="col-2">
+               <div class="large-image">
+                  <img src="{{product.image1.url}}" id="productImg">
+                 </div>
+                    <div class="small-img-row">
+                       <div class="small-img-col">
+                          <img src="{{product.image1.url}}" class="smallImg">
+                       </div>
+                       <div class="small-img-col">
+                        <img src="{{product.image2.url}}" class="smallImg">
+                       </div>
+                       <div class="small-img-col">
+                        <img src="{{product.image3.url}}" class="smallImg">
+                       </div>
+                       <div class="small-img-col">
+                        <img src="{{product.image4.url}}" class="smallImg">
+                       </div>
+                    </div>
+              </div>
+              <div class="col-2">
+                <br>
+                 <p class="product-path">Home/{{product.category}}/{{product.name}}</p>               
+                  <h2 class="product-title">{{product.title}}</h2>
+                  <h2 class="product-price" style="color: #4CBB17;">Rs {{product.price}}</h2>
+
+                  <form action="" method="POST">
+                     {% csrf_token %}
+                     <input hidden type="text" name="product" value="{{product.id}}">
+                     <div class="btn">
+                        <input type="submit" class="btn2" value="Add to cart">
+                     </div>
+                  </form>
+                  <br>
+                  <h3>Offers</h3>
+                  <p>
+                     <ul>
+                        <li>{{product.offer1}}</li>
+                        <li>{{product.offer2}}</li>
+                     </ul>
+                  </p>
+                  <br>
+                  <h3>About this item</h3>
+                  <p>
+                     <ul>
+                        <li>{{product.description1}}</li>
+                        <li>{{product.description2}}</li>
+                        <li>{{product.description3}}</li>
+                        <li>{{product.description4}}</li>
+                        <li>{{product.description5}}</li>
+                        
+                     </ul>
+                     <br><br><br><br>
+                  </p>
+              </div>
+              {% endfor %}
+          </div>
+      </div>
+
+      <!------------SIMILAR PRODUCTS-------------->
+
+      <div class="small-container">
+         <hr>
+         <div class="row row-2">
+            <h2>Similar Products</h2>
+            <p>View More</p>
+         </div>
+         <div class="categories">
+            <div class="small-container">
+               <div class="carousel2-row">
+                  <div class="row">
+                     <div class="col-1">
+                        <div class="carousel2" data-flickity='{"groupCells": true }'>
+                           {% for product in products %}
+                           {% if 1 == product.category.id %}
+                           <div class="carousel2-cell">
+                              <a href="product_details?productId={{product.id}}">
+                              <img src="{{product.image1.url}}">
+                              <p style="color:black;font-weight: 600;">{{product.name}}</p><p style="color:green;">Rs {{product.price}}</p>
+                           </a>
+                           </div>
+                           {% endif %}
+                           {% endfor %}
+                           <div class="carousel2-cell"; style="background-color:blue;">
+                              <a href="all_products?category=1"><h3>View More</h3></a>
+                           </div>
+                         </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         
+         </div>
+      </div>
+
+
+
+      <!---------------Footer----------------->
+      <div class="footer">
+         <div class="container">
+            <div class="row">
+               <div class="footer-col-1">
+                  <h3>Download Our App</h3>
+                  <p>Download App for Android and Ios</p>
+                  <div class="app-logo">
+                     <img src="{% static 'image/playstore.png' %}">
+                     <img src="{% static 'image/appstore.png' %}">
+                  </div>
+               </div>
+               <div class="footer-col-2">
+                  <img src="{% static 'image/logo3.png' %}">
+               </div>
+
+               <div class="footer-col-3">
+                  <h3>Policy</h3>
+                  <ul>
+                     <li>Return Policy</li>
+                     <li>Terms of Use</li>
+                     <li>Privacy</li>
+                     <li>Security</li>
+                  </ul>
+               </div>
+
+               <div class="footer-col-4">
+                  <h3>Social</h3>
+                  <ul>
+                     <li>Facebook</li>
+                     <li>Twitter</li>
+                     <li>Instagram</li>
+                     <li>Youtube</li>
+                  </ul>
+               </div>
+             
+            </div>
+            <hr>
+            <p class="copyright"><small>Copyright 2021 MegaCart - All rights reserverd</small> </p>
+         </div>
+      </div>
+
+      <script>
+
+         var menuItems=document.getElementById("menuItems");
+
+         menuItems.style.maxHeight = "0px";
+
+         function menuToggle(){
+
+            if (menuItems.style.maxHeight=="0px"){
+               menuItems.style.maxHeight="200px";
+            }else{
+               menuItems.style.maxHeight="0px";
+            }
+
+         }
+
+      </script>
+
+      <!------------js for product gallery------------>
+
+      <script>
+         var productImg = document.getElementById("productImg");
+         var smallImg = document.getElementsByClassName("smallImg");
+
+         smallImg[0].onclick =function(){
+            productImg.src = smallImg[0].src;
+         }
+
+         smallImg[1].onclick = function(){
+            productImg.src = smallImg[1].src;
+         }
+
+         smallImg[2].onclick = function(){
+            productImg.src = smallImg[2].src;
+         }
+
+         smallImg[3].onclick = function(){
+            productImg.src = smallImg[3].src;
+         }
+
+
+
+      </script>
+
+       
+   </body>
+
+</html>
