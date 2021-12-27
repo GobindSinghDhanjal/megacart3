@@ -8,10 +8,10 @@
       <title>MegaCart</title>
       <link href="{% static 'css/style2.css' %}" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"> 
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css">
       <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
       <link rel="stylesheet" href="{% static 'css/flickity.css' %}" media="screen">
       <script src="{% static 'js/flickity.pkgd.min.js' %}"></script>
+      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
    </head>
    
    <body>
@@ -21,25 +21,46 @@
          <div class="container">
 
             <div class="navbar">
-              
+
+              <img src="{% static 'image/menu.png' %}" class="menu-icon" onclick="menuToggle()">
+ 
              <div class="logo">
-               <a href="homepage"><img src="{% static 'image/logo3.png' %}"></a>
+                <a href="homepage"><img src="{% static 'image/logo3.png' %}"></a>
+             </div>
+
+             <div class="search">
+                <form action="search" method="post" class="search-form">
+                  {% csrf_token %}
+                   <input class="search-bar" type="text" name="searchProduct" placeholder="Search">
+                   <button type="submit" class="search-btn">Search</button>
+                </form>
+                
              </div>
              <nav>
                 <ul id="menuItems">
-                   <li><a href="homepage">Home</a></li>
-                   <li><a href="about_us">About</a></li>
-                   <li><a href="orders">Orders</a></li>
-                   <li><a href="account">Account</a></li>
+                   <li><a href="homepage"><i class="fas fa-home mobile"></i> Home</a></li>
+                   <li><a href="orders"><i class="fas fa-list mobile"></i> Orders</a></li>
+                   <li><a href="account"><i class="fas fa-user mobile"></i> Account</a></li>
+                   <li><a href="cart"><i class="fas fa-shopping-cart mobile"></i> Cart</a></li>
+                   <li><a href="about_us"><i class="fas fa-building mobile"></i> About</a></li>
                 </ul>
              
              </nav>
-             <a href="cart"><img src="{% static 'image/cartIcon.png' %}" width="30px"></a>
+             <a href="cart"><img src="{% static 'image/cartIcon.png' %}" class="cart-icon-img"></a>
              {% if request.session.cart.keys|length %}
-            <span class="badge">{{request.session.cart.keys|length}}</span>
+            <span class="badge">
+               {{request.session.cart.keys|length}}
+            </span>
             {% endif %}
-             <img src="{% static 'image/menu.png' %}" class="menu-icon" width="26px" onclick="menuToggle()">
- 
+             
+           </div>
+           <div class="search-mobile">
+            <form action="search" method="post" class="search-form">
+               {% csrf_token %}
+               <input class="search-bar" type="text" name="searchProduct" placeholder="Search">
+               <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+            </form>
+            
            </div>
           </div>
       </div>
@@ -47,8 +68,9 @@
       <!-----------------ORDER ITEM DETAILS------------->
 
       <div class="small-container cart-page">
+         <h2 class="orders-heading-mobile">Orders</h2>
           <table>
-              <tr>
+              <tr class="table-head">
                 <th>Product</th>
                 <th>Date</th>
                 <th>Price</th>
@@ -57,27 +79,31 @@
                 <th>Status</th>
               </tr>
               {%for order in orders%}
-              <tr>
+               
+               <tr class="order-items">     
                   <td>
                       <div class="cart-info">
-                          <img src="{{order.product.image1.url}}">
+                          <img class="orders-image" src="{{order.product.image1.url}}">
                           <div class="details">
                               <p>{{order.product.name}}</p>
-                              <small>Rs {{order.product.price}}</small>
                           </div>
                       </div>
                   </td>
-                  <td><p>{{order.date}}</p></td>
-                  <td><p>{{order.price}}</p></td>
-                  <td><p>{{order.quantity}}</p></td>
-                  <td><p>Rs {{order.totalPrice}}</p> </td>
+                  <td><p class="order-text-mobile">Order Date : </p><p>{{order.date}}</p></td>
+                  <td><p class="order-text-mobile">Price : </p><p>{{order.price}}</p></td>
+                  <td><p class="order-text-mobile">Ouantity : </p><p>{{order.quantity}}</p></td>
+                  <td><p class="order-text-mobile">Total Price : </p><p>Rs {{order.totalPrice}}</p> </td>
                   {% if order.status %}
                   <td><small class="status-completed">Completed</small></td>
                   {% else %}
                   <td><small class="status-pending">Pending</small></td>
                   {% endif %}
-                  
-              </tr>
+   
+                </tr>
+                <tr class="orders-hr">
+                   <td colspan="10"><hr class="hr2"></td>
+                </tr>
+        
               {% endfor %}
               
           </table>      
@@ -136,7 +162,7 @@
          function menuToggle(){
 
             if (menuItems.style.maxHeight=="0px"){
-               menuItems.style.maxHeight="200px";
+               menuItems.style.maxHeight="300px";
             }else{
                menuItems.style.maxHeight="0px";
             }

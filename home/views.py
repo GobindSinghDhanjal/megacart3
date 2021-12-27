@@ -6,9 +6,16 @@ from django.utils.decorators import method_decorator
 from middleware.auth import auth_middleware
 
 def index(request):
-   product=Product.get_all_products() 
+#    product=Product.get_all_products() 
    categories=Category.get_all_categories()
    dealsoftheday=DealsOfTheDay.get_all_deals()
+   phone = Product.get_all_products_by_category_id(1)[:7]
+   laptop = Product.get_all_products_by_category_id(3)[:7]
+   tv=Product.get_all_products_by_category_id(4)[:7]
+   product={
+       'phone':phone,
+       'laptop':laptop,
+       'tv':tv}
    data={}
    data['products'] =product
    data['categories'] =categories
@@ -20,17 +27,7 @@ def get_product_by_id(ids):
     return Product.objects.filter(id__in=ids)
 
 def homepage(request):
-    product=Product.get_all_products() 
-    categories=Category.get_all_categories()
-    dealsoftheday=DealsOfTheDay.get_all_deals()
-    data={}
-    data['products'] =product
-    data['categories'] =categories
-    data['deals']=dealsoftheday
-    print("homepage : "+str(request.session.get('email'))) 
-    # clear the session   
-    #request.session.clear()
-    return render(request,'homepage.html',data)
+    return index(request)
 
 def product_details(request):
     if(request.method=="POST"):
@@ -60,13 +57,23 @@ def product_details(request):
             request.session['cart']={}
 
         productId= request.GET.get('productId')
-        products=Product.get_all_products() 
+        
         categories=Category.get_all_categories()
         product=Product.get_product_by_id(productId)
+
+        productCategory = list(Product.get_cart_product_by_id(product).values_list('category', flat=True))
+        try:
+            products=Product.get_all_products_by_category_id(int(productCategory[0]))[:7]
+            
+        except:
+            return redirect('homepage')
+
+        productCategory=str(productCategory[0])
         data={}
         data['product'] =product
         data['products'] =products
         data['categories'] =categories
+        data['productCategory']=productCategory
         print("product : "+str(product))
         cart=request.session.get('cart')
         if not cart:
@@ -130,6 +137,17 @@ def logout(request):
     request.session.clear()
     return redirect('account')
 
+def search(request):
+    if(request.method == "POST"):
+        searchProduct=request.POST['searchProduct']
+        searchedProducts = Product.objects.filter(title__contains=searchProduct)
+
+        data={}
+        data['products'] =searchedProducts
+
+        return render(request,'search.html',data)
+    else:
+        return render(request,'search.html')
 
 def phone_save(request):
     if (request.method == "POST"):
@@ -160,9 +178,6 @@ def address_save(request):
 
 def about_us(request):
     return render(request,'about_us.html')
-
-def payment(request):
-    return render(request,'payment.html')
 
 def account(request):
     return render(request,'account.html')
@@ -205,14 +220,26 @@ def addToCart(request):
 
 def all_products(request):
     categories=Category.get_all_categories()
-    categoryId= request.GET.get('category')
 
-    products=Product.get_all_products_by_category_id(categoryId)
+    try:
+        categoryId= int(request.GET.get('category'))
+    except:
+        categoryId=0
 
     data={}
+
+    if(categoryId==0):
+        products=Product.get_all_products()
+        data['category']="All Products"
+    else:
+         products=Product.get_all_products_by_category_id(categoryId)
+         data['categories'] =categories
+         data['category']=Category.get_category(categoryId)
+   
+
+
     data['products'] =products
-    data['categories'] =categories
-    data['category']=Category.get_category(categoryId)
+
     return render(request,'all_products.html',data)
 
 def productAndCategory():
@@ -225,23 +252,60 @@ def productAndCategory():
 
 @auth_middleware
 def check_out(request):
-    print("request " ,request.POST)
-    customer=request.session.get('customer')
-    cart=request.session.get('cart')
-    products=Product.get_cart_product_by_id(list(cart.keys()))
-    print("Customer ",customer,cart,products)
+    if (request.method=="POST"):
+        print(request.session['cart'])
+        return payment(request)
 
-    for product in products:
-        order=Order(customer=Customer(id=customer),
+    else:
+        # customer=request.session.get('customer')
+        # cart=request.session.get('cart')
+        # products=Product.get_cart_product_by_id(list(cart.keys()))
+        # print("Customer ",customer,cart,products)
+
+        # for product in products:
+        #     order=Order(customer=Customer(id=customer),
+        #             product=product,
+        #             price=product.price,
+        #             quantity=cart.get(str(product.id)),
+        #             totalPrice=product.price*cart.get(str(product.id)))
+        # order.save()
+
+        # request.session['cart']={}
+
+        # return redirect('orders')
+        return redirect('cart')
+
+def payment(request):
+    return render(request,'payment.html')
+
+def orderPlaced(request):
+    if (request.method=="POST"):
+        customer=request.session.get('customer')
+        cart=request.session.get('cart')
+        print("CArt "+str(cart))
+        phone=request.POST['phone']
+        address=request.POST['address']
+
+        products=Product.get_cart_product_by_id(list(cart.keys()))
+        print("Customer ",customer,cart,products)
+
+        for product in products:
+            order=Order(customer=Customer(id=customer),
                     product=product,
                     price=product.price,
                     quantity=cart.get(str(product.id)),
-                    totalPrice=product.price*cart.get(str(product.id)))
-        order.save()
+                    totalPrice=product.price*cart.get(str(product.id)),
+                    phone=phone,
+                    address=address)
+            order.save()
+        
 
-    request.session['cart']={}
 
-    return redirect('orders')
+        request.session['cart']={}
+
+        return redirect('orders')
+    else:
+        return HttpResponse("wrong")
 
 @auth_middleware
 def orderHistory(request):

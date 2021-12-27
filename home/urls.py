@@ -20,7 +20,9 @@ urlpatterns = [
     path('orders',views.orderHistory,name='orders'),
     path('phone_save',views.phone_save,name='phone_save'),
     path('address_save',views.address_save,name='address_save'),
-    path('payment',views.payment,name='payment')
+    path('payment',views.payment,name='payment'),
+    path('search',views.search,name='search'),
+    path('orderPlaced',views.orderPlaced,name='orderPlaced')
 
 
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

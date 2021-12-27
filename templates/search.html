@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html>
+   {%load static%}
+   {%load cart%}
+   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>MegaCart</title>
+      <link href="{% static 'css/style2.css' %}" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"> 
+      <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+      <link rel="stylesheet" href="{% static 'css/flickity.css' %}" media="screen">
+      <script src="{% static 'js/flickity.pkgd.min.js' %}"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+   </head>
+   
+   <body>
+      
+      <div class="header">
+
+         <div class="container">
+
+            <div class="navbar">
+
+              <img src="{% static 'image/menu.png' %}" class="menu-icon" onclick="menuToggle()">
+ 
+             <div class="logo">
+                <a href="homepage"><img src="{% static 'image/logo3.png' %}"></a>
+             </div>
+
+             <div class="search">
+                <form action="search" method="post" class="search-form">
+                  {% csrf_token %}
+                   <input class="search-bar" type="text" name="searchProduct" placeholder="Search">
+                   <button type="submit" class="search-btn">Search</button>
+                </form>
+                
+             </div>
+             <nav>
+                <ul id="menuItems">
+                   <li><a href="homepage"><i class="fas fa-home mobile"></i> Home</a></li>
+                   <li><a href="orders"><i class="fas fa-list mobile"></i> Orders</a></li>
+                   <li><a href="account"><i class="fas fa-user mobile"></i> Account</a></li>
+                   <li><a href="cart"><i class="fas fa-shopping-cart mobile"></i> Cart</a></li>
+                   <li><a href="about_us"><i class="fas fa-building mobile"></i> About</a></li>
+                </ul>
+             
+             </nav>
+             <a href="cart"><img src="{% static 'image/cartIcon.png' %}" class="cart-icon-img"></a>
+             {% if request.session.cart.keys|length %}
+            <span class="badge">
+               {{request.session.cart.keys|length}}
+            </span>
+            {% endif %}
+             
+           </div>
+           <div class="search-mobile">
+            <form action="search" method="post" class="search-form">
+               {% csrf_token %}
+               <input class="search-bar" type="text" name="searchProduct" placeholder="Search">
+               <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+            </form>
+            
+           </div>
+          </div>
+      </div>
+
+      <!-----------PRODUCTS---------->
+
+      <div class="categories">
+         <div class="small-container">
+            <center><h2>Search Results</h2></center><br>
+            <div class="row">
+               {% if products %}
+               {% for product in products %}
+               <a href="product_details?productId={{product.id}}" class="all-products">
+                  <img src="{{product.image1.url}}">
+                  <div class="all-products-details">
+                  <h3>{{product.name}}</h3>
+                  <br>
+                  <div class="rating">
+                     <span class="fa fa-star checked"></span>
+                     <span class="fa fa-star checked"></span>
+                     <span class="fa fa-star checked"></span>
+                     <span class="fa fa-star checked"></span>
+                     <span class="fa fa-star-half-o star checked"></span>
+                    </div>
+                  <small class="product-description">
+                     <ul>
+                        <li>{{product.description1}}</li>
+                        <li>{{product.description2}}</li>
+                        <li>{{product.description3}}</li>
+                     </ul>
+                  </small>
+                 </div>
+                 <h2 class="all-products-price">Rs {{product.price}}</h2>
+                 <p class="all-products-price-mobile">Rs {{product.price}}</p>
+                 <br>
+                 <div class="rating-mobile">
+                  <span class="fa fa-star checked"></span>
+                  <span class="fa fa-star checked"></span>
+                  <span class="fa fa-star checked"></span>
+                  <span class="fa fa-star checked"></span>
+                  <span class="fa fa-star-half-o star checked"></span>
+                 </div>
+                 <p class="all-products-delivery">Free Delivery By Megcart</p>
+                 </a>
+               <hr class="hr2">
+               {% endfor %}
+               {% else %}
+               <h3 class="no-search">No Results Found.....</h3>
+               {% endif %}
+               
+            </div>         
+         </div>
+      </div>
+
+
+
+      <!---------------Footer----------------->
+      <div class="footer">
+         <div class="container">
+            <div class="row">
+               <div class="footer-col-1">
+                  <h3>Download Our App</h3>
+                  <p>Download App for Android and Ios</p>
+                  <div class="app-logo">
+                     <img src="{% static 'image/playstore.png' %}">
+                     <img src="{% static 'image/appstore.png' %}">
+                  </div>
+               </div>
+               <div class="footer-col-2">
+                  <img src="{% static 'image/logo3.png' %}">
+               </div>
+
+               <div class="footer-col-3">
+                  <h3>Policy</h3>
+                  <ul>
+                     <li>Return Policy</li>
+                     <li>Terms of Use</li>
+                     <li>Privacy</li>
+                     <li>Security</li>
+                  </ul>
+               </div>
+
+               <div class="footer-col-4">
+                  <h3>Social</h3>
+                  <ul>
+                     <li>Facebook</li>
+                     <li>Twitter</li>
+                     <li>Instagram</li>
+                     <li>Youtube</li>
+                  </ul>
+               </div>
+             
+            </div>
+            <hr>
+            <p class="copyright"><small>Copyright 2021 MegaCart - All rights reserverd</small> </p>
+         </div>
+      </div>
+
+      <script>
+
+         var menuItems=document.getElementById("menuItems");
+
+         menuItems.style.maxHeight = "0px";
+
+         function menuToggle(){
+
+            if (menuItems.style.maxHeight=="0px"){
+               menuItems.style.maxHeight="300px";
+            }else{
+               menuItems.style.maxHeight="0px";
+            }
+
+         }
+
+      </script>
+
+       
+   </body>
+
+</html>

@@ -7,10 +7,10 @@
       <title>MegaCart</title>
       <link href="{% static 'css/style2.css' %}" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"> 
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css">
       <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
       <link rel="stylesheet" href="{% static 'css/flickity.css' %}" media="screen">
       <script src="{% static 'js/flickity.pkgd.min.js' %}"></script>
+      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
    </head>
    
    <body>
@@ -20,29 +20,49 @@
          <div class="container">
 
             <div class="navbar">
-              
+
+              <img src="{% static 'image/menu.png' %}" class="menu-icon" onclick="menuToggle()">
+ 
              <div class="logo">
-               <a href="homepage"><img src="{% static 'image/logo3.png' %}"></a>
+                <a href="homepage"><img src="{% static 'image/logo3.png' %}"></a>
+             </div>
+
+             <div class="search">
+                <form action="search" method="post" class="search-form">
+                  {% csrf_token %}
+                   <input class="search-bar" type="text" name="searchProduct" placeholder="Search">
+                   <button type="submit" class="search-btn">Search</button>
+                </form>
+                
              </div>
              <nav>
-               <ul id="menuItems">
-                  <li><a href="homepage">Home</a></li>
-                  <li><a href="about_us">About</a></li>
-                  <li><a href="orders">Orders</a></li>
-                  <li><a href="account">Account</a></li>
-               </ul>
-            
-            </nav>
-            <a href="cart"><img src="{% static 'image/cartIcon.png' %}" width="30px"></a>
-            {% if request.session.cart.keys|length %}
-            <span class="badge">{{request.session.cart.keys|length}}</span>
+                <ul id="menuItems">
+                   <li><a href="homepage"><i class="fas fa-home mobile"></i> Home</a></li>
+                   <li><a href="orders"><i class="fas fa-list mobile"></i> Orders</a></li>
+                   <li><a href="account"><i class="fas fa-user mobile"></i> Account</a></li>
+                   <li><a href="cart"><i class="fas fa-shopping-cart mobile"></i> Cart</a></li>
+                   <li><a href="about_us"><i class="fas fa-building mobile"></i> About</a></li>
+                </ul>
+             
+             </nav>
+             <a href="cart"><img src="{% static 'image/cartIcon.png' %}" class="cart-icon-img"></a>
+             {% if request.session.cart.keys|length %}
+            <span class="badge">
+               {{request.session.cart.keys|length}}
+            </span>
             {% endif %}
-             <img src="{% static 'image/menu.png' %}" class="menu-icon" width="26px" onclick="menuToggle()">
- 
+             
+           </div>
+           <div class="search-mobile">
+            <form action="search" method="post" class="search-form">
+               {% csrf_token %}
+               <input class="search-bar" type="text" name="searchProduct" placeholder="Search">
+               <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+            </form>
+            
            </div>
           </div>
       </div>
-
       <!----------------LOGIN DETAILS----------->
       
       <div class="account-page">
@@ -97,15 +117,16 @@
 
                            <br>
 
-                           <form action="address_save" method="POST">
-                             {% csrf_token %}    
-                             <div class="address">
-                              <h3>Address : </h3>
-                              <textarea class="address-textarea" name="address" rows="4" cols="25">{{request.session.address}}
-                              </textarea>
-                              <button type="submit" class="save-btn">SAVE</button>
-                             </div>
-                          </form>   
+                              <form action="address_save" method="POST">
+                                 {% csrf_token %}    
+                                 <div class="address">
+                                  <h3>Address : </h3>
+                                  <textarea class="address-textarea" name="address" rows="4" cols="25">{{request.session.address}}
+                                  </textarea>
+                                  <button type="submit" class="save-btn">SAVE</button>
+                                 </div>
+                              </form> 
+                             
 
                            <form action="logout" method="POST">
                               {% csrf_token %}  
@@ -174,7 +195,7 @@
          function menuToggle(){
 
             if (menuItems.style.maxHeight=="0px"){
-               menuItems.style.maxHeight="200px";
+               menuItems.style.maxHeight="300px";
             }else{
                menuItems.style.maxHeight="0px";
             }

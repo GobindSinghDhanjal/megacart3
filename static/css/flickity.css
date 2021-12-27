@@ -140,12 +140,7 @@ https://flickity.metafizzy.co
 @media (max-width:800px) {
 
   .flickity-prev-next-button {
-    top: 50%;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    /* vertically center */
-    transform: translateY(-50%);
+    display: none;
   }
 
 }
