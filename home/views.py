@@ -218,6 +218,32 @@ def addToCart(request):
     else:
         return render(request,'product_details.html')
 
+def removeCartProduct(request):
+    if(request.method=="POST"):
+        
+        product=request.POST.get('product')
+        cart=request.session.get('cart')
+
+        print("PRoduct : "+str(product)+ "  Cart : "+str(cart))
+
+        quantity=cart.get(product)
+        print("Quantity "+str(quantity))
+
+        if quantity>1:
+            cart[product]=quantity-1
+        else:
+            del cart[product]
+
+        request.session['cart']=cart
+
+        
+        # print(request.session['cart'])
+
+        return redirect('cart')
+    else:
+        return render(request,'product_details.html')
+
+
 def all_products(request):
     categories=Category.get_all_categories()
 

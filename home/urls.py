@@ -22,7 +22,9 @@ urlpatterns = [
     path('address_save',views.address_save,name='address_save'),
     path('payment',views.payment,name='payment'),
     path('search',views.search,name='search'),
-    path('orderPlaced',views.orderPlaced,name='orderPlaced')
+    path('orderPlaced',views.orderPlaced,name='orderPlaced'),
+    path('removeCartProduct',views.removeCartProduct,name='removeCartProduct')
+
 
 
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

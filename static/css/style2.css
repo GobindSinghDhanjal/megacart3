@@ -973,6 +973,14 @@ form a{
     font-weight: 600;
 }
 
+.removeCartBtn{
+    border: none;
+    background-color: transparent;
+    color: orangered;
+    font-weight: 600;
+    cursor: pointer;
+}
+
 
 
 

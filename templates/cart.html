@@ -86,7 +86,12 @@
                               <p>{{product.name}}</p>
                               <small>Rs {{product.price}}</small>
                               <br>
-                              <a href="">Remove</a>
+                              <form class="removeCart" action="removeCartProduct" method="post">
+                                 <input hidden type="text" name="product" value="{{product.id}}">
+                                 {% csrf_token %}
+                                 <button type="submit" class="removeCartBtn">Remove</button>
+                              </form>
+                              
                           </div>
                       </div>
                   </td>
