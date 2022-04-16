@@ -686,6 +686,14 @@ th:last-child{
     margin: 10%;
 }
 
+.payment-btn{
+    background: none;
+}
+
+.payment-btn:hover{
+    background: none;
+}
+
 .phone-number{
     width: 180px;
     float: left;
