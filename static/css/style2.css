@@ -807,8 +807,18 @@ form .btn{
     left:-300px;
 }
 
+#loginForm input{
+    padding: 10px;
+    border-radius: 10px;
+}
+
 #regForm{
     left: 0px;
+}
+
+#regForm input{
+    padding: 10px;
+    border-radius: 10px;
 }
 
 form a{
