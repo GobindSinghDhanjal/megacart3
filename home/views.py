@@ -5,6 +5,8 @@ from django.utils.decorators import method_decorator
 
 from middleware.auth import auth_middleware
 
+from django.conf import settings
+
 def index(request):
 #    product=Product.get_all_products() 
    categories=Category.get_all_categories()
@@ -332,6 +334,12 @@ def orderPlaced(request):
         return redirect('orders')
     else:
         return HttpResponse("wrong")
+
+def get_context_data(self, **kwargs):
+    context = get_context_data(**kwargs)
+    context['key'] = settings.STRIPE_PUBLISHABLE_KEY
+    return context
+
 
 @auth_middleware
 def orderHistory(request):
