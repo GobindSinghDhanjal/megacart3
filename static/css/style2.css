@@ -933,10 +933,10 @@ form a{
     font-family: "FontAwesome";
 }
 .search{
-    width: 50%;
+    width: 40%;
 }
 .search-bar{
-    width: 80%;
+    width: 70%;
     display: inline-block;
     padding: 20px;
     border-radius: 10px;
@@ -1047,10 +1047,13 @@ form a{
 
     .search-mobile{
         display: block;
+        margin: auto;
+        text-align: center;
 
     }
 
     .search-bar{
+        width: 80%;
         margin-left: 0;
         margin-right: 0;
     }
